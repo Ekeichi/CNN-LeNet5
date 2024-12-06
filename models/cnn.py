@@ -49,9 +49,6 @@ class CNN:
         d_out = self.pool1.backward(d_out)
         d_out = self.conv1.backward(d_out, lr)
 
-    def update_weights(self, learning_rate):
-        # Mise à jour des poids
-        pass
 
     def save_model(self, filename):
         # Sauvegarde de tous les paramètres du modèle
