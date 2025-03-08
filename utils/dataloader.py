@@ -50,10 +50,10 @@ def load_mnist(data_dir="./data", train_limit=None, test_limit=None):
         train_dataset = torch.utils.data.Subset(train_dataset, range(train_limit))
     if test_limit:
         test_dataset = torch.utils.data.Subset(test_dataset, range(test_limit))
-
     
-    train_dataset = [(img, label) for img, label in train_dataset if label in [0, 1]]
-    test_dataset = [(img, label) for img, label in test_dataset if label in [0, 1]]  
+    # Filtrer pour garder uniquement les classes 0, 1, 2, 3
+    train_dataset = [(img, label) for img, label in train_dataset if label in [0, 1, 2, 3]]
+    test_dataset = [(img, label) for img, label in test_dataset if label in [0, 1, 2, 3]]
 
     # Extraire les images et les labels
     train_images = np.array([data[0] for data in train_dataset])  # Images d'entraînement

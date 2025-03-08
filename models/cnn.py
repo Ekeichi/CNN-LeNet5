@@ -8,13 +8,13 @@ class CNN:
         self.conv1 = Convolutional((32, 1, 32, 32), 5, 6, stride=1, padding=0)
         self.pool1 = avg_pooling()
         self.sig1 = Relu()
-        self.conv2 = Convolutional((32, 1, 14, 14), 5, 16, stride=1, padding=0)
+        self.conv2 = Convolutional((32, 6, 14, 14), 5, 16, stride=1, padding=0)
         self.pool2 = avg_pooling()
         self.sig2 = Relu()
-        self.conv3 = Convolutional((32, 1, 5, 5), 5, 120, stride=1, padding=0)
+        self.conv3 = Convolutional((32, 16, 5, 5), 5, 120, stride=1, padding=0)
         self.Fc1 = Fc(120, 84)
         self.sig3 = Relu()
-        self.Fc2 = Fc(84, 10)
+        self.Fc2 = Fc(84, 4)  # Sortie pour les classes 0, 1, 2, 3
 
     def forward(self, X):
         # Passer les données à travers les couches
@@ -53,15 +53,35 @@ class CNN:
     def save_model(self, filename):
         # Sauvegarde de tous les paramètres du modèle
         np.savez(filename, 
-            conv1_weights=self.conv1_weights,
-            conv1_bias=self.conv1_bias,
-            conv2_weights=self.conv2_weights,
-            conv2_bias=self.conv2_bias,
-            fc1_weights=self.fc1_weights,
-            fc1_bias=self.fc1_bias,
-            fc2_weights=self.fc2_weights,
-            fc2_bias=self.fc2_bias,
-            output_weights=self.output_weights,
-            output_bias=self.output_bias
+            conv1_weights=self.conv1.kernels,
+            conv1_bias=self.conv1.biases,
+            conv2_weights=self.conv2.kernels,
+            conv2_bias=self.conv2.biases,
+            conv3_weights=self.conv3.kernels,
+            conv3_bias=self.conv3.biases,
+            fc1_weights=self.Fc1.weights,
+            fc1_bias=self.Fc1.bias,
+            fc2_weights=self.Fc2.weights,
+            fc2_bias=self.Fc2.bias
         )
         print(f"Modèle LeNet-5 sauvegardé dans {filename}")
+        
+    def load_model(self, filename):
+        # Chargement des paramètres du modèle
+        try:
+            data = np.load(filename)
+            self.conv1.kernels = data['conv1_weights']
+            self.conv1.biases = data['conv1_bias']
+            self.conv2.kernels = data['conv2_weights']
+            self.conv2.biases = data['conv2_bias']
+            self.conv3.kernels = data['conv3_weights']
+            self.conv3.biases = data['conv3_bias']
+            self.Fc1.weights = data['fc1_weights']
+            self.Fc1.bias = data['fc1_bias']
+            self.Fc2.weights = data['fc2_weights']
+            self.Fc2.bias = data['fc2_bias']
+            print(f"Modèle LeNet-5 chargé depuis {filename}")
+            return True
+        except Exception as e:
+            print(f"Erreur lors du chargement du modèle: {e}")
+            return False

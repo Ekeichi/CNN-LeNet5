@@ -29,9 +29,9 @@ class Convolutional():
             for d in range(self.depth):
                 for i in range(self.output_height):
                     for j in range(self.output_width):
-                        h_start = i #* self.stride
+                        h_start = i * self.stride
                         h_end = h_start + self.kernel_size
-                        w_start = j #* self.stride
+                        w_start = j * self.stride
                         w_end = w_start + self.kernel_size
 
                         input_patch = self.input[b, :, h_start:h_end, w_start:w_end]
@@ -140,9 +140,17 @@ class Relu():
 class sigmoid():
     def forward(self, input):
         self.input = input
-        return 1/(1 + np.exp(-input))
+        self.output = 1/(1 + np.exp(-input))
+        return self.output
     
     def backward(self, output_gradient):
-        X = self.input
-        return output_gradient*X*(1-X)
-        
+        return output_gradient * self.output * (1 - self.output)
+
+class tanh():
+    def forward(self, input):
+        self.input = input
+        self.output = np.tanh(input)
+        return self.output
+    
+    def backward(self, output_gradient):
+        return output_gradient * (1 - self.output**2)
