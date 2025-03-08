@@ -94,8 +94,8 @@ Cela évaluera le modèle sur l'ensemble de test et affichera:
 ## Performances
 
 Sur un MacBook Pro avec puce M1, le modèle atteint généralement:
-- Une précision d'environ 95-99% sur les chiffres 0, 1, 2 et 3
-- Un temps d'entraînement inférieur à 5 minutes pour 5 époques
+- Une précision d'environ 85 - 90% sur les chiffres 0, 1, 2 et 3
+- Un temps d'entraînement inférieur à 15 minutes pour 10 époques
 
 ## Limitations actuelles
 
@@ -108,7 +108,3 @@ Sur un MacBook Pro avec puce M1, le modèle atteint généralement:
 - Implémenter plus de fonctions d'activation
 - Ajouter la régularisation pour éviter le surapprentissage
 - Optimiser davantage le code pour de meilleures performances
-
-## Licence
-
-Ce projet est fourni sans licence spécifique pour une utilisation éducative.
