@@ -12,12 +12,12 @@ class Convolutional():
         # Dimensions de l'entrée
         self.batch_size, self.input_depth, self.input_height, self.input_width = input_shape
 
-        # Initialisation des noyaux (kernels) et des biais
+        # Initialisation des kernels et des biais
         self.kernels_shape = (depth, self.input_depth, kernel_size, kernel_size)
         self.kernels = np.random.randn(*self.kernels_shape) * np.sqrt(2 / (self.input_depth * kernel_size * kernel_size))
         self.biases = np.zeros(self.depth)
 
-        # Calcul de la taille de la sortie (output)
+        # Calcul de la taille de la sortie
         self.output_height = (self.input_height - kernel_size + 2 * padding) // stride + 1
         self.output_width = (self.input_width - kernel_size + 2 * padding) // stride + 1
         self.output_shape = (self.batch_size, self.depth, self.output_height, self.output_width)

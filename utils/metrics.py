@@ -13,7 +13,7 @@ def cross_entropy_loss(y_true, logits):
     # Calcul des probabilités avec la softmax
     probs = softmax(logits)
     # Calcul de la perte pour chaque exemple
-    loss = -np.sum(y_true * np.log(probs + 1e-9)) / y_true.shape[0]  # Ajout de 1e-9 pour éviter log(0)
+    loss = -np.sum(y_true * np.log(probs + 1e-9)) / y_true.shape[0] w
     # Gradient de la perte par rapport aux logits
     grad = (probs - y_true) / y_true.shape[0]
     return loss, grad

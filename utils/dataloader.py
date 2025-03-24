@@ -7,23 +7,17 @@ import torch
 def load_mnist(data_dir="./data", train_limit=None, test_limit=None):
     """
     Télécharge le dataset MNIST et le retourne sous forme de tableaux NumPy.
-    
-    Args:
-        data_dir (str): Dossier où télécharger les données.
-
-    Returns:
-        (tuple): (train_images, train_labels), (test_images, test_labels)
     """
 
     sample_ratio = 0.1
-    # Transformation pour convertir les images en tenseurs puis en tableaux NumPy
+    # conversion pour numpy
     transform = transforms.Compose([
-        transforms.ToTensor(),  # Convertit en tenseur PyTorch (C, H, W) normalisé entre [0, 1]
+        transforms.ToTensor(),
         transforms.Pad(padding=2, fill=0),
-        transforms.Lambda(lambda x: x.numpy())  # Convertit en tableau NumPy
+        transforms.Lambda(lambda x: x.numpy())
     ])
     
-    # Télécharger les données
+    # télécharger données
     train_dataset = torchvision.datasets.MNIST(
         root=data_dir,
         train=True,
@@ -38,12 +32,6 @@ def load_mnist(data_dir="./data", train_limit=None, test_limit=None):
         download=True
     )
 
-    # # Sous-échantillonner
-    # train_indices = random.sample(range(len(train_dataset)), int(len(train_dataset) * sample_ratio))
-    # test_indices = random.sample(range(len(test_dataset)), int(len(test_dataset) * sample_ratio))
-
-    # train_dataset = torch.utils.data.Subset(train_dataset, train_indices)
-    # test_dataset = torch.utils.data.Subset(test_dataset, test_indices)
 
     # Sous-échantillonnage
     if train_limit:
@@ -71,11 +59,6 @@ class DataLoader:
     def __init__(self, data, labels, batch_size, shuffle=True):
         """
         Initialisation du DataLoader.
-        
-        :param data: numpy array des données (e.g., images de taille (N, H, W))
-        :param labels: numpy array des labels (e.g., (N,))
-        :param batch_size: taille des batchs
-        :param shuffle: bool, si les données doivent être mélangées à chaque epoch
         """
         self.data = data
         self.labels = labels
