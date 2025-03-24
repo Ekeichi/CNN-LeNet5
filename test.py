@@ -8,35 +8,26 @@ from models.cnn import CNN
 from evaluate import softmax
 
 def test_model(model_path=None, test_samples=1000, batch_size=32, display_examples=True):
-    """
-    Teste un modèle CNN sur l'ensemble de test MNIST.
-    
-    Args:
-        model_path: Chemin vers le modèle sauvegardé (.npz)
-        test_samples: Nombre d'échantillons de test à utiliser
-        batch_size: Taille du batch pour le test
-        display_examples: Afficher quelques exemples de prédictions
-    """
-    # Charger les données de test
+
+    # charger data test
     print("Chargement des données de test...")
     (_, _), (test_images, test_labels) = load_mnist(test_limit=test_samples)
     test_loader = DataLoader(test_images, test_labels, batch_size=batch_size, shuffle=True)
     
-    # Créer et charger le modèle
+    # charger le modèle
     model = CNN()
     if model_path and os.path.exists(model_path):
         print(f"Chargement du modèle depuis {model_path}...")
         model.load_model(model_path)
     else:
-        print("Utilisation d'un modèle non entraîné (résultats aléatoires attendus)")
+        print("Utilisation d'un modèle non entraîné")
     
     # Évaluer le modèle
     correct_predictions = 0
     total_predictions = 0
-    class_correct = np.zeros(4)  # 4 classes (0, 1, 2, 3)
-    class_total = np.zeros(4)  # 4 classes (0, 1, 2, 3)
+    class_correct = np.zeros(4)
+    class_total = np.zeros(4)
     
-    # Pour l'affichage des exemples
     examples_to_show = []
     
     for batch in test_loader:
@@ -56,36 +47,35 @@ def test_model(model_path=None, test_samples=1000, batch_size=32, display_exampl
             if predictions[i] == label:
                 class_correct[label] += 1
             
-            # Collecter quelques exemples pour affichage
+            # affichage qq exemples
             if len(examples_to_show) < 10 and i % 10 == 0:
                 examples_to_show.append((
-                    images_batch[i, 0],  # Image (prendre le premier canal)
-                    label,               # Vrai label
-                    predictions[i],      # Prédiction
-                    probabilities[i]     # Probabilités
+                    images_batch[i, 0],
+                    label,
+                    predictions[i],
+                    probabilities[i]
                 ))
     
-    # Afficher les résultats
+    # resultats
     accuracy = (correct_predictions / total_predictions) * 100
     print(f"\nPrécision globale: {accuracy:.2f}%")
     
     print("\nPrécision par classe:")
-    for i in range(4):  # 4 classes (0, 1, 2, 3)
+    for i in range(4):
         if class_total[i] > 0:
             class_accuracy = (class_correct[i] / class_total[i]) * 100
             print(f"Classe {i}: {class_accuracy:.2f}% ({int(class_correct[i])}/{int(class_total[i])})")
     
-    # Afficher des exemples de prédictions
+    
     if display_examples and examples_to_show:
         plt.figure(figsize=(15, 8))
         for i, (img, true_label, pred_label, probs) in enumerate(examples_to_show):
-            if i >= 5:  # Limiter à 5 exemples
+            if i >= 5:
                 break
                 
             plt.subplot(1, 5, i+1)
             plt.imshow(img, cmap='gray')
             
-            # Colorier le titre en fonction de la prédiction (vert si correct, rouge si incorrect)
             title_color = 'green' if true_label == pred_label else 'red'
             plt.title(f"Vrai: {true_label}\nPréd: {pred_label}", color=title_color)
             plt.axis('off')

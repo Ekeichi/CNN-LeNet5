@@ -41,21 +41,21 @@ class Convolutional():
     def backward(self, output_gradient, learning_rate):
         kernels_gradient = np.zeros_like(self.kernels)
         input_gradient = np.zeros_like(self.input)
-        # Batch-wise processing
+        # Process par batch
         for b in range(self.batch_size):
-        # Compute kernel gradients
+        # Calcul des gradient
             for d in range(self.depth):
                 for j in range(self.input_depth):
-                    # Use correlate for kernel gradient computation
+                    # correlation
                     kernels_gradient[d, j] += signal.correlate2d(self.input[b, j], output_gradient[b, d], mode="valid")
 
-        # Compute input gradients
+        # caclul des gradients de sortie
             for d in range(self.depth):
                 for j in range(self.input_depth):
-                # Use convolution for input gradient
+                # conv
                     input_gradient[b, j] += signal.convolve2d(output_gradient[b, d], self.kernels[d, j], mode="full")
 
-        # Update parameters
+        # Maj
         self.kernels -= learning_rate * kernels_gradient
         self.biases -= learning_rate * np.sum(output_gradient, axis=(0, 2, 3))
         return input_gradient
@@ -105,7 +105,7 @@ class avg_pooling():
         return output
     
     def backward(self, d_out):
-    # Dimensions du tenseur d'entrée
+    # dim input tensor
         stride = self.stride
         pool_size = self.pool_size 
 
